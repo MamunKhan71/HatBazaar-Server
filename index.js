@@ -23,18 +23,18 @@ const client = new MongoClient(uri, {
 });
 async function run() {
     try {
-        // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
-        // Send a ping to confirm a successful connection
         // await client.db("admin").command({ ping: 1 });
         // console.log("Pinged your deployment. You successfully connected to MongoDB!");
         const database = client.db("HatBazaar")
         const productCollection = database.collection('products')
+
         // This will return all the document count when the website first calls
         app.get('/count', async (req, res) => {
             const result = await productCollection.countDocuments()
             res.send({ result })
         })
+
         // This will return the product according to the pages
         app.get('/products', async (req, res) => {
             const page = parseInt(req.query.page)
@@ -42,6 +42,7 @@ async function run() {
             const result = await productCollection.find().skip(page * size).limit(size).toArray()
             return res.send(result)
         })
+
         // This will return the filtered products according to the condition
         app.get('/filtered-products', async (req, res) => {
             try {
