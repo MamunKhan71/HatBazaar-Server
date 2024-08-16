@@ -31,8 +31,14 @@ async function run() {
         const productCollection = database.collection('products')
 
         app.get('/products', async (req, res) => {
-            const result = await productCollection.find().toArray()
+            const page = parseInt(req.query.page)
+            const size = parseInt(req.query.size)
+            const result = await productCollection.find().skip(page * size).limit(size).toArray()
             return res.send(result)
+        })
+        app.get('/count', async (req, res) => {
+            const result = await productCollection.estimatedDocumentCount()
+            console.log(result);
         })
     } finally {
         // Ensures that the client will close when you finish/error
